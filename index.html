@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Spider-Man Hub</title>
+    <!-- Шрифти та іконки -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #e50914;
+            --secondary: #38bdf8;
+            --dark: #0b0f19;
+            --card-bg: #1f2937;
+            --border: #374151;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Навігація */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: #111827;
+            border-bottom: 3px solid var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            border: 1px solid var(--border);
+        }
+
+        h2 {
+            margin-bottom: 15px;
+            color: var(--secondary);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        /* Гра */
+        .game-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid var(--primary);
+        }
+
+        canvas {
+            display: block;
+            background: linear-gradient(to bottom, #0f172a, #1e1b4b);
+        }
+
+        .game-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(229, 9, 20, 0.6);
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            background: #b91c1c;
+            transform: scale(1.05);
+        }
+
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        /* Голосування */
+        .polls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .poll-option {
+            position: relative;
+            background: #374151;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: background 0.3s;
+        }
+
+        .poll-option:hover {
+            background: #4b5563;
+        }
+
+        .poll-option span {
+            position: relative;
+            z-index: 2;
+            font-weight: bold;
+        }
+
+        .bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: rgba(229, 9, 20, 0.4);
+            z-index: 1;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            padding-left: 15px;
+            font-size: 13px;
+            color: #fca5a5;
+        }
+
+        /* Галерея костюмів */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .gallery-card {
+            background: #374151;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: 0.3s;
+        }
+
+        .gallery-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--secondary);
+        }
+
+        .gallery-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        /* Чат коментарів */
+        .chat-box {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-messages {
+            background: #111827;
+            height: 150px;
+            border-radius: 6px;
+            padding: 10px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .chat-msg {
+            background: #374151;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .chat-input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-group input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: #111827;
+            color: white;
+        }
+
+        /* Адаптивність */
+        @media (max-width: 768px) {
+            .header { padding: 15px 20px; flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Шапка сайту -->
+<header class="header">
+    <div class="logo">🕷️ SPIDER-VERSE HUB</div>
+    <nav class="nav-links">
+        <a href="#game">Гра</a>
+        <a href="#polls">Голосування</a>
+        <a href="#gallery">Костюми</a>
+        <a href="#chat">Чати</a>
+    </nav>
+    <div class="user-panel" id="userPanel">
+        <!-- Telegram віджет (Замініть YOUR_BOT_NAME на ім'я вашого бота від BotFather) -->
+        <script async src="https://telegram.org/js/telegram-widget.js?22"
+                data-telegram-login="YOUR_BOT_NAME"
+                data-size="medium"
+                data-onauth="onTelegramAuth(user)"
+                data-request-access="write">
+        </script>
+    </div>
+</header>
+
+<div class="container">
+
+    <!-- 1. МІНІ-ІГРА -->
+    <section id="game">
+        <h2>Міні-гра: Spider Swing Escape</h2>
+        <p>Натискай **Пробіл** або **Клік** на екрані, щоб випустити павутину та уникнути падіння!</p>
+        <div class="game-container">
+            <canvas id="gameCanvas" width="950" height="400"></canvas>
+            <div class="game-overlay" id="gameOverlay">
+                <h1 style="color: var(--secondary);">SPIDER SWING</h1>
+                <button class="btn" id="startBtn">Почати гру</button>
+            </div>
+        </div>
+        <div class="game-stats">
+            <span>Рахунок: <span id="score">0</span></span>
+            <span>Рекорд: <span id="highScore">0</span></span>
+        </div>
+    </section>
+
+    <!-- 2. ГОЛОСУВАННЯ -->
+    <section id="polls">
+        <h2>Опитування: Найкращий всесвіт або костюм</h2>
+        <div class="polls">
+            <div class="poll-option" onclick="vote('Classic')">
+                <span>Класичний червоно-синій</span>
+                <div class="bar" id="bar1" style="width: 0%;">0%</div>
+            </div>
+            <div class="poll-option" onclick="vote('Symbiote')">
+                <span>Симбіот (Чорний костюм)</span>
+                <div class="bar" id="bar2" style="width: 0%;">0%</div>
+            </div>
+            <div class="poll-option" onclick="vote('Miles')">
+                <span>Костюм Майлза Моралеса (Чорний з червоним)</span>
+                <div class="bar" id="bar3" style="width: 0%;">0%</div>
+            </div>
+        </div>
+        <p id="voteStatus" style="margin-top: 10px; font-size: 13px; color: #9ca3af;"></p>
+    </section>
+
+    <!-- 3. ГАЛЕРЕЯ КОСТЮМІВ -->
+    <section id="gallery">
+        <h2>Архів Костюмів</h2>
+        <div class="gallery-grid">
+            <div class="gallery-card">
+                <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=400" alt="Suit">
+                <h3>Classic Suit</h3>
+                <p style="font-size:12px; color:#9ca3af;">Оригінальний дизайн Степана Дітко.</p>
+            </div>
+            <div class="gallery-card">
+                <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400" alt="Suit">
+                <h3>Advanced Tech</h3>
+                <p style="font-size:12px; color:#9ca3af;">Сучасна броня з білими лініями.</p>
+            </div>
+            <div class="gallery-card">
+                <img src="https://images.unsplash.com/photo-1563089145-599997674d42?w=400" alt="Suit">
+                <h3>Noir Edition</h3>
+                <p style="font-size:12px; color:#9ca3af;">Детективний стиль 1930-х років.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. ІНТЕРАКТИВНИЙ ЧАТ -->
+    <section id="chat">
+        <h2>Балакач Павутиння (Локальний чат)</h2>
+        <div class="chat-box">
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-msg"><b>Система:</b> Вітаємо у фан-зоні Людини-Павука! Залишайте свої коментарі.</div>
+            </div>
+            <div class="chat-input-group">
+                <input type="text" id="chatInput" placeholder="Напишіть повідомлення...">
+                <button class="btn" onclick="sendMessage()">Відправити</button>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    /* --- 1. АВТОРИЗАЦІЯ TELEGRAM --- */
+    function onTelegramAuth(user) {
+        const userPanel = document.getElementById('userPanel');
+        userPanel.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <img src="${user.photo_url}" alt="Avatar" style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--secondary);">
+                    <span style="font-size: 14px;"><b>${user.first_name}</b></span>
+                </div>
+            `;
+        localStorage.setItem('tg_user', JSON.stringify(user));
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const savedUser = localStorage.getItem('tg_user');
+        if (savedUser) {
+            onTelegramAuth(JSON.parse(savedUser));
+        }
+        loadComments();
+    });
+
+    /* --- 2. ЛОГІКА МІНІ-ІГРИ --- */
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const startBtn = document.getElementById('startBtn');
+    const gameOverlay = document.getElementById('gameOverlay');
+    const scoreEl = document.getElementById('score');
+    const highScoreEl = document.getElementById('highScore');
+
+    let gameRunning = false;
+    let score = 0;
+    let highScore = localStorage.getItem('spider_highscore') || 0;
+    highScoreEl.innerText = highScore;
+
+    let spider = { x: 100, y: 200, vy: 0, gravity: 0.25, radius: 12 };
+    let buildings = [];
+    let webTarget = null;
+    let obstacles = [];
+
+    function initGame() {
+        score = 0;
+        scoreEl.innerText = score;
+        spider.x = 100;
+        spider.y = 200;
+        spider.vy = 0;
+        buildings = [];
+        obstacles = [];
+
+        for (let i = 0; i < 10; i++) {
+            buildings.push({ x: i * 160, height: 120 + Math.random() * 180 });
+        }
+        gameRunning = true;
+        gameOverlay.style.display = 'none';
+        loop();
+    }
+
+    startBtn.addEventListener('click', initGame);
+
+    window.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' && gameRunning) triggerWeb();
+    });
+    canvas.addEventListener('click', () => {
+        if (gameRunning) triggerWeb();
+    });
+
+    function triggerWeb() {
+        let target = buildings.find(b => b.x > spider.x);
+        if (target) {
+            webTarget = { x: target.x + 30, y: canvas.height - target.height };
+        }
+    }
+
+    function update() {
+        if (!gameRunning) return;
+
+        if (webTarget) {
+            let dx = webTarget.x - spider.x;
+            let dy = webTarget.y - spider.y;
+            spider.x += dx * 0.08;
+            spider.y += dy * 0.08;
+            if (Math.hypot(dx, dy) < 35) webTarget = null;
+        } else {
+            spider.vy += spider.gravity;
+            spider.y += spider.vy;
+        }
+
+        // Рух будівель
+        buildings.forEach(b => b.x -= 2.5);
+
+        if (buildings[buildings.length - 1].x < canvas.width + 100) {
+            let lastB = buildings[buildings.length - 1];
+            buildings.push({ x: lastB.x + 160, height: 120 + Math.random() * 180 });
+
+            // Рандомна перешкода (дрон)
+            if (Math.random() > 0.5) {
+                obstacles.push({ x: canvas.width + 100, y: 50 + Math.random() * 150, size: 15 });
+            }
+        }
+
+        if (buildings[0].x < -160) {
+            buildings.shift();
+            score += 15;
+            scoreEl.innerText = score;
+            if (score > highScore) {
+                highScore = score;
+                highScoreEl.innerText = highScore;
+                localStorage.setItem('spider_highscore', highScore);
+            }
+        }
+
+        obstacles.forEach(o => o.x -= 2.5);
+
+        // Перевірка зіткнень
+        if (spider.y > canvas.height - 20 || spider.y < 0) {
+            gameOver();
+        }
+
+        obstacles.forEach(o => {
+            if (Math.hypot(spider.x - o.x, spider.y - o.y) < spider.radius + o.size) {
+                gameOver();
+            }
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Будівлі
+        ctx.fillStyle = '#111827';
+        buildings.forEach(b => {
+            ctx.fillRect(b.x, canvas.height - b.height, 60, b.height);
+            ctx.fillStyle = '#facc15'; // Вікна
+            for (let wx = b.x + 10; wx < b.x + 45; wx += 14) {
+                for (let wy = canvas.height - b.height + 15; wy < canvas.height - 20; wy += 22) {
+                    ctx.fillRect(wx, wy, 6, 10);
+                }
+            }
+            ctx.fillStyle = '#111827';
+        });
+
+        // Перешкоди (дрони)
+        ctx.fillStyle = '#ef4444';
+        obstacles.forEach(o => {
+            ctx.beginPath();
+            ctx.arc(o.x, o.y, o.size, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        // Павутина
+        if (webTarget) {
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(spider.x, spider.y);
+            ctx.lineTo(webTarget.x, webTarget.y);
+            ctx.stroke();
+        }
+
+        // Людина-Павук
+        ctx.fillStyle = '#e50914';
+        ctx.beginPath();
+        ctx.arc(spider.x, spider.y, spider.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    function loop() {
+        if (!gameRunning) return;
+        update();
+        draw();
+        requestAnimationFrame(loop);
+    }
+
+    function gameOver() {
+        gameRunning = false;
+        gameOverlay.style.display = 'flex';
+        startBtn.innerText = 'Спробувати знову';
+    }
+
+    /* --- 3. ГОЛОСУВАННЯ --- */
+    let votes = JSON.parse(localStorage.getItem('spider_votes')) || { 'Classic': 45, 'Symbiote': 30, 'Miles': 25 };
+
+    function vote(option) {
+        const savedUser = localStorage.getItem('tg_user');
+        if (!savedUser) {
+            alert('Авторизуйтесь через Telegram у шапці сайту, щоб залишити голос!');
+            return;
+        }
+        if (localStorage.getItem('already_voted')) {
+            alert('Ви вже проголосували раніше!');
+            return;
+        }
+
+        votes[option]++;
+        localStorage.setItem('spider_votes', JSON.stringify(votes));
+        localStorage.setItem('already_voted', 'true');
+        updatePollUI();
+        document.getElementById('voteStatus').innerText = 'Дякуємо! Ваш голос успішно зараховано.';
+    }
+
+    function updatePollUI() {
+        let total = Object.values(votes).reduce((a, b) => a + b, 0);
+        let p1 = Math.round((votes['Classic'] / total) * 100);
+        let p2 = Math.round((votes['Symbiote'] / total) * 100);
+        let p3 = Math.round((votes['Miles'] / total) * 100);
+
+        document.getElementById('bar1').style.width = p1 + '%';
+        document.getElementById('bar1').innerText = `Класичний - ${p1}%`;
+        document.getElementById('bar2').style.width = p2 + '%';
+        document.getElementById('bar2').innerText = `Симбіот - ${p2}%`;
+        document.getElementById('bar3').style.width = p3 + '%';
+        document.getElementById('bar3').innerText = `Майлз Моралес - ${p3}%`;
+    }
+    updatePollUI();
+
+    /* --- 4. ЧАТ --- */
+    function sendMessage() {
+        const input = document.getElementById('chatInput');
+        if (!input.value.trim()) return;
+
+        const savedUser = JSON.parse(localStorage.getItem('tg_user'));
+        const userName = savedUser ? savedUser.first_name : 'Гість';
+
+        let comments = JSON.parse(localStorage.getItem('spider_comments')) || [];
+        comments.push({ name: userName, text: input.value });
+        localStorage.setItem('spider_comments', JSON.stringify(comments));
+
+        input.value = '';
+        loadComments();
+    }
+
+    function loadComments() {
+        const container = document.getElementById('chatMessages');
+        let comments = JSON.parse(localStorage.getItem('spider_comments')) || [];
+
+        let html = '<div class="chat-msg"><b>Система:</b> Вітаємо у фан-зоні Людини-Павука!</div>';
+        comments.forEach(c => {
+            html += `<div class="chat-msg"><b>${c.name}:</b> ${c.text}</div>`;
+        });
+        container.innerHTML = html;
+        container.scrollTop = container.scrollHeight;
+    }
+</script>
+</body>
+</html>
